@@ -10,6 +10,17 @@ import {
   TotaledSkill,
 } from './interface';
 
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+import { Low } from 'lowdb';
+import { JSONFile } from 'lowdb/node';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const dbFile = join(__dirname, `../src/data/lowdb.json`);
+const adapter = new JSONFile(dbFile);
+const lowDb = new Low(adapter, {});
+await lowDb.read();
+
 export const getApiDocumentationHtml = () => {
   return `<h1>GET A JOB API</h1> <ul>
   <li><a href="/jobs">/jobs</a>- returns an array of job objects</li>
