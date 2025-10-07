@@ -66,6 +66,11 @@ app.get('/totaledSkills', (req: express.Request, res: express.Response) => {
   res.json(getTotaledSkills());
 });
 
+app.get('/test', (req: express.Request, res: express.Response) => {
+  // res.json(getTotaledSkills());
+  res.send('test from server');
+});
+
 app.listen(port, () => {
   console.log(`listening on http://localhost:${port}`);
 });
