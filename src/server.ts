@@ -11,6 +11,7 @@ import {
   getJobs,
   getTodos,
   getTotaledSkills,
+  getTest,
 } from './model';
 
 const app = express();
@@ -67,8 +68,8 @@ app.get('/totaledSkills', (req: express.Request, res: express.Response) => {
 });
 
 app.get('/test', (req: express.Request, res: express.Response) => {
-  // res.json(getTotaledSkills());
-  res.send('test from server');
+  res.json(getTest());
+  // res.send('test from server');
 });
 
 app.listen(port, () => {

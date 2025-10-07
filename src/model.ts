@@ -163,3 +163,7 @@ export const lookupSkill = (idCode: string): ISkillInfos => {
     };
   }
 };
+
+export const getTest = () => {
+  return 'test from model';
+};
