@@ -1,25 +1,63 @@
-import fs from 'fs';
+// import fs from 'fs';
 
-import rawJobs from './data/jobs.json';
-import skillInfos from './data/skillInfos.json';
-import {
-  IJobs,
-  IRawJob,
-  ISkillInfos,
-  nullObjectSkill,
-  TotaledSkill,
-} from './interface';
+// import rawJobs from './data/jobs.json';
+// import rawJobs from './data/jobs.json' assert { type: 'json' };
+
+// prettier-ignore
+// import rawJobs from './data/jobs.json' with { type: 'json' };
+// OR using the following line of code instead of above line:
+
+/* 
+import fs from 'fs/promises';
+const jobs = JSON.parse(await fs.readFile('./dist/data/jobs.json', 'utf-8'));
+*/
+
+// import skillInfos from './data/skillInfos.json';
+// import skillInfos from './data/skillInfos.json' assert { type: 'json' };
+
+// prettier-ignore
+// import skillInfos from './data/skillInfos.json' with { type: 'json' };
+
+import fs from 'fs/promises';
+import path from 'path';
 
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { Low } from 'lowdb';
 import { JSONFile } from 'lowdb/node';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const dbFile = join(__dirname, `../src/data/lowdb.json`);
-const adapter = new JSONFile(dbFile);
-const lowDb = new Low(adapter, {});
-await lowDb.read();
+import {
+  IJobs,
+  IRawJob,
+  ISkillInfos,
+  nullObjectSkill,
+  TotaledSkill,
+} from './interface.js';
+
+interface DataSchema {
+  test: string;
+}
+
+// const __dirname = dirname(fileURLToPath(import.meta.url));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const dbFile = join(__dirname, `../src/data/db.json`);
+const adapter = new JSONFile<DataSchema>(dbFile);
+// const db = new Low(adapter, {});
+const defaultData: DataSchema = { test: '' };
+const db = new Low<DataSchema>(adapter, defaultData);
+await db.read();
+
+const filePath_jobs = path.join(__dirname, '../src/data/jobs.json');
+const filePath_skillInfos = path.join(__dirname, '../src/data/skillInfos.json');
+// const rawJobs = JSON.parse(await fs.readFile(filePath, 'utf-8'));
+
+// const skillInfos = JSON.parse(await fs.readFile('./data/jobs.json', 'utf-8');
+const rawJobs = JSON.parse(await fs.readFile(filePath_jobs, 'utf-8'));
+
+// const skillInfos = JSON.parse(await fs.readFile('./data/skillInfos.json', 'utf-8');
+const skillInfos = JSON.parse(await fs.readFile(filePath_skillInfos, 'utf-8'));
 
 export const getApiDocumentationHtml = () => {
   return `<h1>GET A JOB API</h1> <ul>
@@ -112,7 +150,7 @@ export const buildSkills = (skillList: string) => {
 };
 
 export const getTodos = () => {
-  const todos = rawJobs.map((job) => {
+  const todos = rawJobs.map((job: IRawJob) => {
     return {
       todo: job.todo,
       company: job.company,
@@ -176,5 +214,7 @@ export const lookupSkill = (idCode: string): ISkillInfos => {
 };
 
 export const getTest = () => {
-  return 'test from model';
+  // return 'test from model';
+  const typedData = db.data as { test: string };
+  return typedData.test;
 };

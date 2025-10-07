@@ -1,6 +1,7 @@
 {
   "name": "mk004-node-web-server",
   "version": "1.0.0",
+  "type": "module",
   "main": "dist/server.js",
   "scripts": {
     "watch-server": "nodemon --watch src --ext ts --exec \"tsc -P tsconfig.json\"",

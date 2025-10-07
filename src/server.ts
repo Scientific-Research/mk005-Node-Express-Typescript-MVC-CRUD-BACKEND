@@ -12,7 +12,7 @@ import {
   getTodos,
   getTotaledSkills,
   getTest,
-} from './model';
+} from './model.js';
 
 const app = express();
 app.use(cors()); // erlaubt alle Origins
