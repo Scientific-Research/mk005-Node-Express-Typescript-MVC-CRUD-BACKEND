@@ -12,6 +12,7 @@ import {
   getTodos,
   getTotaledSkills,
   getTest,
+  deleteJob,
 } from './model.js';
 
 const app = express();
@@ -73,10 +74,24 @@ app.get('/test', (req: express.Request, res: express.Response) => {
   // res.send('test from server');
 });
 
-app.delete('/jobs/:id', (req: express.Request, res: express.Response) => {
+app.delete('/jobs/:id', async (req: express.Request, res: express.Response) => {
   const id = Number(req.params.id);
-  const nextId = id + 1;
-  res.send(`delete this job with id: ${id} and next id would be: ${nextId}`);
+
+  // store the deleted Object came back from model.ts(deleteJob function) in deletedObject variable!
+  const deletedObject = await deleteJob(id);
+
+  // when there is not such an object(because it was already deleted or there is no such id) => we get undefined!
+  if (deletedObject === undefined) {
+    res.status(409).send({
+      error: true,
+      message: `job with id ${id} does not exist, `,
+    });
+  } else {
+    // when deleted Object is not undefined and is available, we will display it at the output with success code => 200
+    res.status(200).json(deletedObject);
+  }
+  // const nextId = id + 1;
+  // res.send(`delete this job with id: ${id} and next id would be: ${nextId}`);
 });
 
 app.listen(port, () => {

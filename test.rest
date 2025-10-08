@@ -7,4 +7,4 @@ GET {{url}}
 GET {{url}}/jobs
 
 ### delete a job
-DELETE {{url}}/jobs/455
+DELETE {{url}}/jobs/1

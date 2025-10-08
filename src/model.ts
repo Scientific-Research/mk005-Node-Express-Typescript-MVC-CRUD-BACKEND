@@ -241,3 +241,17 @@ export const getTest = () => {
   // return value as Array:
   // return [typedData.jobs, typedData.skillInfos];
 };
+
+export const deleteJob = async (id: number) => {
+  // find the requested Object for delete in db.json
+  const deletedObject = db.data.jobs.find((j) => j.id === id);
+
+  // filter all the data except the one which is not intended to be deleted!
+  db.data.jobs = db.data.jobs.filter((j) => j.id !== id);
+
+  // write diese filtered data(not deleted ones) to the db.json
+  await db.write();
+
+  // send back the one which we want to delete(when is not available => undefined) to the deleteJob function in server.ts
+  return deletedObject;
+};
