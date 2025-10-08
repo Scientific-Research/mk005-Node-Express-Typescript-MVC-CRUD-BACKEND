@@ -76,7 +76,7 @@ app.get('/test', (req: express.Request, res: express.Response) => {
 app.delete('/jobs/:id', (req: express.Request, res: express.Response) => {
   const id = Number(req.params.id);
   const nextId = id + 1;
-  res.send(`will delete this job with id: ${nextId}`);
+  res.send(`delete this job with id: ${id} and next id would be: ${nextId}`);
 });
 
 app.listen(port, () => {
