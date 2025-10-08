@@ -67,6 +67,7 @@ app.get('/totaledSkills', (req: express.Request, res: express.Response) => {
   res.json(getTotaledSkills());
 });
 
+// NOTE Shows all the Jobs and SkillInfos together extracted from our Lowdb databank => db.json => only for test purposes => we can delete it.
 app.get('/test', (req: express.Request, res: express.Response) => {
   res.json(getTest());
   // res.send('test from server');

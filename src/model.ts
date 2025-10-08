@@ -225,6 +225,7 @@ export const lookupSkill = (idCode: string): ISkillInfos => {
   }
 };
 
+// NOTE Shows all the Jobs and SkillInfos together extracted from our Lowdb databank => db.json => only for test purposes => we can delete it.
 export const getTest = () => {
   // return 'test from model';
   // const typedData = db.data as { jobs: string };
