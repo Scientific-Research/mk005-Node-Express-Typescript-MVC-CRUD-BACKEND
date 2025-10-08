@@ -35,7 +35,9 @@ import {
 } from './interface.js';
 
 interface DataSchema {
-  test: string;
+  // test: string;
+  jobs: IRawJob[];
+  skillInfos: ISkillInfos[];
 }
 
 // const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -45,7 +47,7 @@ const __dirname = path.dirname(__filename);
 const dbFile = join(__dirname, `../src/data/db.json`);
 const adapter = new JSONFile<DataSchema>(dbFile);
 // const db = new Low(adapter, {});
-const defaultData: DataSchema = { test: '' };
+const defaultData: DataSchema = { jobs: [], skillInfos: [] };
 const db = new Low<DataSchema>(adapter, defaultData);
 await db.read();
 
@@ -54,10 +56,14 @@ const filePath_skillInfos = path.join(__dirname, '../src/data/skillInfos.json');
 // const rawJobs = JSON.parse(await fs.readFile(filePath, 'utf-8'));
 
 // const skillInfos = JSON.parse(await fs.readFile('./data/jobs.json', 'utf-8');
-const rawJobs = JSON.parse(await fs.readFile(filePath_jobs, 'utf-8'));
+// const rawJobs = JSON.parse(await fs.readFile(filePath_jobs, 'utf-8'));
+
+// NOTE: WE HAVE TO USE LowDB, that's why we use => const rawJobs = db.data.jobs;
 
 // const skillInfos = JSON.parse(await fs.readFile('./data/skillInfos.json', 'utf-8');
-const skillInfos = JSON.parse(await fs.readFile(filePath_skillInfos, 'utf-8'));
+// const skillInfos = JSON.parse(await fs.readFile(filePath_skillInfos, 'utf-8'));
+
+// NOTE: WE HAVE TO USE LowDB, that's why we use => const skillInfos = db.data.skillInfos;
 
 export const getApiDocumentationHtml = () => {
   return `<h1>GET A JOB API</h1> <ul>
@@ -84,6 +90,9 @@ a, h1 {
 
 export const getJobs = () => {
   const jobs: IJobs[] = [];
+
+  const rawJobs = db.data.jobs; // we get the rawJobs from LowDB and not from fs.readSync() anymore.
+
   rawJobs.forEach((rawJob: IRawJob) => {
     const job: IJobs = {
       ...rawJob,
@@ -105,7 +114,8 @@ export const buildSkills = (skillList: string) => {
     const _skillIdCode = skillIdCodes[i];
     // console.log(_skillIdCode); //'angular','cicd','testing','hotjar','piwik',...
 
-    const skill = skillInfos.find(
+    // const skill = skillInfos.find( => using Lowdb as following:
+    const skill = db.data.skillInfos.find(
       (info: ISkillInfos) => info.idCode === _skillIdCode
       // (info: ISkillInfos) => info.idCode === skillIdCode
     );
@@ -150,7 +160,8 @@ export const buildSkills = (skillList: string) => {
 };
 
 export const getTodos = () => {
-  const todos = rawJobs.map((job: IRawJob) => {
+  // const todos = rawJobs.map((job: IRawJob) => { using Lowdb as following:
+  const todos = db.data.jobs.map((job: IRawJob) => {
     return {
       todo: job.todo,
       company: job.company,
@@ -196,7 +207,8 @@ export const lookupSkill = (idCode: string): ISkillInfos => {
   //   (info) => info.idCode === idCode
   // );
 
-  const _skill = (skillInfos as ISkillInfos[]).find(
+  // const _skill = (skillInfos as ISkillInfos[]).find( using Lowdb as following:
+  const _skill = (db.data.skillInfos as ISkillInfos[]).find(
     (skill) => skill.idCode === idCode
   );
 
@@ -215,6 +227,16 @@ export const lookupSkill = (idCode: string): ISkillInfos => {
 
 export const getTest = () => {
   // return 'test from model';
-  const typedData = db.data as { test: string };
-  return typedData.test;
+  // const typedData = db.data as { jobs: string };
+  const typedData = db.data as DataSchema;
+  // return typedData.jobs;
+
+  // return value as Object:
+  return {
+    jobs: db.data.jobs,
+    skillInfos: db.data.skillInfos,
+  };
+
+  // return value as Array:
+  // return [typedData.jobs, typedData.skillInfos];
 };
