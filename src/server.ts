@@ -73,6 +73,12 @@ app.get('/test', (req: express.Request, res: express.Response) => {
   // res.send('test from server');
 });
 
+app.delete('/jobs/:id', (req: express.Request, res: express.Response) => {
+  const id = Number(req.params.id);
+  const nextId = id + 1;
+  res.send(`will delete this job with id: ${nextId}`);
+});
+
 app.listen(port, () => {
   console.log(`listening on http://localhost:${port}`);
 });
